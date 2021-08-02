@@ -5,7 +5,7 @@ Map<dynamic, dynamic> groupBy(Iterable list, f(element)) {
   for (var e in list) {
     var key = f(e);
     if (!grouped.containsKey(key)) {
-      grouped[key] = new List();
+      grouped[key] = [];
     }
     grouped[key].add(e);
   }
@@ -19,7 +19,7 @@ class ConsumerOffset {
   final int partitionId;
   final int offset;
   final String metadata;
-  final int errorCode;
+  final int? errorCode;
 
   ConsumerOffset(this.topicName, this.partitionId, this.offset, this.metadata,
       [this.errorCode]);

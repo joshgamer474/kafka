@@ -139,11 +139,11 @@ class ProduceResult {
       errors.addAll(new Set<KafkaServerError>.from(er));
       r.results.forEach((result) {
         offsets.putIfAbsent(result.topicName, () => new Map());
-        offsets[result.topicName][result.partitionId] = result.offset;
+        offsets[result.topicName]?[result.partitionId] = result.offset;
       });
     }
 
-    return new ProduceResult._(responses, errors, offsets);
+    return new ProduceResult._(responses.toList(), errors, offsets);
   }
 
   /// Returns `true` if this result contains server error with specified [code].

@@ -11,7 +11,7 @@ class OffsetRequest extends KafkaRequest {
   /// Unique ID assigned to the [host] within Kafka cluster.
   final int replicaId;
 
-  Map<String, List<_PartitionOffsetRequestInfo>> _topics = new Map();
+  Map<String, List<_PartitionOffsetRequestInfo>> _topics = Map();
 
   /// Creates new instance of OffsetRequest.
   ///
@@ -30,11 +30,11 @@ class OffsetRequest extends KafkaRequest {
   void addTopicPartition(
       String topicName, int partitionId, int time, int maxNumberOfOffsets) {
     if (_topics.containsKey(topicName) == false) {
-      _topics[topicName] = new List();
+      _topics[topicName] = [];
     }
 
-    _topics[topicName].add(
-        new _PartitionOffsetRequestInfo(partitionId, time, maxNumberOfOffsets));
+    _topics[topicName]?.add(
+        _PartitionOffsetRequestInfo(partitionId, time, maxNumberOfOffsets));
   }
 
   /// Converts this request into a binary representation according to Kafka
@@ -83,6 +83,7 @@ class _PartitionOffsetRequestInfo {
 
   /// How many offsets to return.
   final int maxNumberOfOffsets;
+
   _PartitionOffsetRequestInfo(
       this.partitionId, this.time, this.maxNumberOfOffsets);
 }
@@ -96,13 +97,13 @@ class OffsetResponse {
 
   /// Creates OffsetResponse from the provided binary data.
   factory OffsetResponse.fromBytes(List<int> data) {
-    var reader = new KafkaBytesReader.fromBytes(data);
+    var reader = KafkaBytesReader.fromBytes(data);
     var size = reader.readInt32();
     assert(size == data.length - 4);
 
     reader.readInt32(); // correlationId
     var count = reader.readInt32();
-    var offsets = new List<TopicOffsets>();
+    List<TopicOffsets> offsets = [];
     while (count > 0) {
       var topicName = reader.readString();
       var partitionCount = reader.readInt32();
@@ -110,8 +111,12 @@ class OffsetResponse {
         var partitionId = reader.readInt32();
         var errorCode = reader.readInt16();
         var partitionOffsets = reader.readArray(KafkaType.int64);
-        offsets.add(new TopicOffsets._(topicName, partitionId, errorCode,
-            partitionOffsets)); // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
+        offsets.add(TopicOffsets._(
+            topicName,
+            partitionId,
+            errorCode,
+            partitionOffsets
+                as List<int>)); // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
         partitionCount--;
       }
       count--;

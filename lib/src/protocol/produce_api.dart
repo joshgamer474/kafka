@@ -39,7 +39,7 @@ class ProduceRequest extends KafkaRequest {
       if (!messageSets.containsKey(envelope.topicName)) {
         messageSets[envelope.topicName] = new Map<int, MessageSet>();
       }
-      messageSets[envelope.topicName][envelope.partitionId] =
+      messageSets[envelope.topicName]?[envelope.partitionId] =
           new MessageSet.build(envelope);
     }
 
@@ -81,7 +81,7 @@ class ProduceResponse {
     assert(size == data.length - 4);
 
     reader.readInt32(); // correlationId
-    var results = new List<TopicProduceResult>();
+    List<TopicProduceResult> results = [];
     var topicCount = reader.readInt32();
     while (topicCount > 0) {
       var topicName = reader.readString();

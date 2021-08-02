@@ -11,7 +11,7 @@ class Broker {
   /// Port number of this broker.
   final int port;
 
-  static final Map<String, Broker> _instances = new Map();
+  static final Map<String, Broker> _instances = Map();
 
   /// Creates new instance of Kafka broker.
   factory Broker(int id, String host, int port) {
@@ -19,10 +19,10 @@ class Broker {
     if (!_instances.containsKey(key)) {
       _instances[key] = new Broker._(id, host, port);
     } else {
-      if (_instances[key].id != id) throw new StateError('Broker ID mismatch.');
+      if (_instances[key]?.id != id) throw StateError('Broker ID mismatch.');
     }
 
-    return _instances[key];
+    return _instances[key]!;
   }
 
   Broker._(this.id, this.host, this.port);
@@ -35,7 +35,7 @@ class TopicPartition {
   final String topicName;
   final int partitionId;
 
-  static final Map<String, TopicPartition> _cache = new Map();
+  static final Map<String, TopicPartition> _cache = Map();
 
   TopicPartition._(this.topicName, this.partitionId);
 
@@ -45,12 +45,13 @@ class TopicPartition {
       _cache[key] = new TopicPartition._(topicName, partitionId);
     }
 
-    return _cache[key];
+    return _cache[key]!;
   }
 
   @override
   bool operator ==(other) {
-    return (other.topicName == topicName && other.partitionId == partitionId);
+    return ((other as TopicPartition).topicName == topicName &&
+        other.partitionId == partitionId);
   }
 
   @override

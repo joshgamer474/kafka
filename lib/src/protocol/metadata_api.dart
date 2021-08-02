@@ -10,7 +10,7 @@ class MetadataRequest extends KafkaRequest {
 
   /// List of topic names to fetch metadata for. If set to null or empty
   /// this request will fetch metadata for all topics.
-  final Set<String> topicNames;
+  final Set<String>? topicNames;
 
   /// Creats new instance of Kafka MetadataRequest.
   ///
@@ -20,9 +20,9 @@ class MetadataRequest extends KafkaRequest {
 
   @override
   List<int> toBytes() {
-    var builder = new KafkaBytesBuilder.withRequestHeader(
-        apiKey, apiVersion, correlationId);
-    Set list = (this.topicNames is Set) ? this.topicNames : new Set();
+    var builder =
+        KafkaBytesBuilder.withRequestHeader(apiKey, apiVersion, correlationId);
+    Set<String> list = (this.topicNames is Set) ? this.topicNames! : Set();
     builder.addArray(list, KafkaType.string);
 
     var body = builder.takeBytes();
@@ -79,9 +79,10 @@ class TopicMetadata {
     var errorCode = reader.readInt16();
     var topicName = reader.readString();
     List partitions = reader.readArray(
-        KafkaType.object, (reader) => new PartitionMetadata._readFrom(reader));
+        KafkaType.object, (reader) => PartitionMetadata._readFrom(reader));
     // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-    return new TopicMetadata._(errorCode, topicName, partitions);
+    return TopicMetadata._(
+        errorCode, topicName, partitions as List<PartitionMetadata>);
   }
 
   PartitionMetadata getPartition(int partitionId) =>
@@ -110,11 +111,11 @@ class PartitionMetadata {
     var replicas = reader.readArray(KafkaType.int32);
     var inSyncReplicas = reader.readArray(KafkaType.int32);
 
-    return new PartitionMetadata._(
+    return PartitionMetadata._(
         errorCode,
         partitionId,
         leader,
-        replicas, // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-        inSyncReplicas);
+        replicas as List<int>, // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
+        inSyncReplicas as List<int>);
   }
 }

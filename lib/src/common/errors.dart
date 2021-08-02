@@ -48,9 +48,9 @@ class KafkaServerError {
   /// Numeric code of this server error.
   final int code;
 
-  static final Map<int, KafkaServerError> _instances = new Map();
+  static final Map<int, KafkaServerError> _instances = Map();
 
-  static const Map<int, String> _errorTexts = const {
+  static const Map<int, String> _errorTexts = {
     0: 'NoError',
     -1: 'Unknown',
     1: 'OffsetOutOfRange',
@@ -90,7 +90,7 @@ class KafkaServerError {
   };
 
   /// String representation of this server error.
-  String get message => _errorTexts[code];
+  String get message => _errorTexts[code]!;
 
   KafkaServerError._(this.code);
 
@@ -100,29 +100,46 @@ class KafkaServerError {
       _instances[code] = new KafkaServerError._(code);
     }
 
-    return _instances[code];
+    return _instances[code]!;
   }
 
   @override
   String toString() => 'KafkaServerError: ${message}(${code})';
 
   bool get isError => code != NoError;
+
   bool get isNoError => code == NoError;
+
   bool get isUnknown => code == Unknown;
+
   bool get isOffsetOutOfRange => code == OffsetOutOfRange;
+
   bool get isInvalidMessage => code == InvalidMessage;
+
   bool get isUnknownTopicOrPartition => code == UnknownTopicOrPartition;
+
   bool get isInvalidMessageSize => code == InvalidMessageSize;
+
   bool get isLeaderNotAvailable => code == LeaderNotAvailable;
+
   bool get isNotLeaderForPartition => code == NotLeaderForPartition;
+
   bool get isRequestTimedOut => code == RequestTimedOut;
+
   bool get isBrokerNotAvailable => code == BrokerNotAvailable;
+
   bool get isReplicaNotAvailable => code == ReplicaNotAvailable;
+
   bool get isMessageSizeTooLarge => code == MessageSizeTooLarge;
+
   bool get isStaleControllerEpoch => code == StaleControllerEpoch;
+
   bool get isOffsetMetadataTooLarge => code == OffsetMetadataTooLarge;
+
   bool get isOffsetsLoadInProgress => code == OffsetsLoadInProgress;
+
   bool get isConsumerCoordinatorNotAvailable =>
       code == ConsumerCoordinatorNotAvailable;
+
   bool get isNotCoordinatorForConsumer => code == NotCoordinatorForConsumer;
 }

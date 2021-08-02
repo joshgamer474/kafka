@@ -34,10 +34,10 @@ class FetchRequest extends KafkaRequest {
       [int maxBytes = 65536]) {
     //
     if (!_topics.containsKey(topicName)) {
-      _topics[topicName] = new List();
+      _topics[topicName] = [];
     }
     _topics[topicName]
-        .add(new _FetchPartitionInfo(partitionId, fetchOffset, maxBytes));
+        ?.add(_FetchPartitionInfo(partitionId, fetchOffset, maxBytes));
   }
 
   @override
@@ -76,6 +76,7 @@ class _FetchPartitionInfo {
   int partitionId;
   int fetchOffset;
   int maxBytes;
+
   _FetchPartitionInfo(this.partitionId, this.fetchOffset, this.maxBytes);
 }
 
@@ -100,7 +101,7 @@ class FetchResponse {
 
     reader.readInt32(); // correlationId
     var count = reader.readInt32();
-    var results = new List<FetchResult>();
+    List<FetchResult> results = [];
     var hasErrors = false;
     while (count > 0) {
       var topicName = reader.readString();

@@ -32,20 +32,20 @@ class OffsetMaster {
     var requests = new Map<Broker, OffsetRequest>();
     for (var topic in topicPartitions.keys) {
       var partitions = topicPartitions[topic];
-      for (var p in partitions) {
+      for (var p in partitions!) {
         var leader = meta.getTopicMetadata(topic).getPartition(p).leader;
         var host = meta.getBroker(leader);
         if (!requests.containsKey(host)) {
-          requests[host] = new OffsetRequest(leader);
+          requests[host] = OffsetRequest(leader);
         }
-        requests[host].addTopicPartition(topic, p, time, 1);
+        requests[host]?.addTopicPartition(topic, p, time, 1);
       }
     }
 
-    var offsets = new List<TopicOffset>();
+    List<TopicOffset> offsets = [];
     for (var host in requests.keys) {
       var request = requests[host];
-      OffsetResponse response = await session.send(host, request);
+      OffsetResponse response = await session.send(host, request!);
       for (var o in response.offsets) {
         var error = new KafkaServerError(o.errorCode);
         if (error.isNotLeaderForPartition && refreshMetadata == false) {
