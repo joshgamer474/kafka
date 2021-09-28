@@ -82,7 +82,7 @@ class TopicMetadata {
         KafkaType.object, (reader) => PartitionMetadata._readFrom(reader));
     // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
     return TopicMetadata._(
-        errorCode, topicName, partitions as List<PartitionMetadata>);
+        errorCode, topicName, partitions.cast<PartitionMetadata>());
   }
 
   PartitionMetadata getPartition(int partitionId) =>
@@ -115,7 +115,7 @@ class PartitionMetadata {
         errorCode,
         partitionId,
         leader,
-        replicas as List<int>, // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
-        inSyncReplicas as List<int>);
+        replicas.cast<int>(), // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
+        inSyncReplicas.cast<int>());
   }
 }
