@@ -249,6 +249,9 @@ class _ConsumerWorker {
           }
         }
       }
+      if (controller.limit == -1) {
+        controller._cancelled = true;
+      }
     }
   }
 
