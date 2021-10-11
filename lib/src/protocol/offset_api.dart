@@ -115,8 +115,7 @@ class OffsetResponse {
             topicName,
             partitionId,
             errorCode,
-            partitionOffsets
-                as List<int>)); // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
+            partitionOffsets.cast<int>())); // ignore: STRONG_MODE_DOWN_CAST_COMPOSITE
         partitionCount--;
       }
       count--;

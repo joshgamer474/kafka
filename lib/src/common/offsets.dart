@@ -1,13 +1,13 @@
 part of kafka.common;
 
-Map<dynamic, dynamic> groupBy(Iterable list, f(element)) {
-  var grouped = new Map();
-  for (var e in list) {
-    var key = f(e);
+Map<String, List<ConsumerOffset>> groupBy(List<ConsumerOffset> list, f(ConsumerOffset element)) {
+  var grouped = new Map<String, List<ConsumerOffset>>();
+  for (ConsumerOffset e in list) {
+    String key = f(e);
     if (!grouped.containsKey(key)) {
       grouped[key] = [];
     }
-    grouped[key].add(e);
+    grouped[key]!.add(e);
   }
 
   return grouped;
